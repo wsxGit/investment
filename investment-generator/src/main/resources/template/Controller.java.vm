@@ -1,0 +1,90 @@
+package ${package}.${moduleName}.controller;
+
+import ${package}.${moduleName}.entity.${className}Entity;
+import ${package}.${moduleName}.service.${className}Service;
+import ${mainPath}.common.utils.PageUtils;
+import ${mainPath}.common.utils.R;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import lombok.RequiredArgsConstructor;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Arrays;
+import java.util.Map;
+
+
+/**
+ * ${comments}
+ *
+ * @author ${author}
+ */
+@RestController
+@RequestMapping("${moduleName}/${pathName}")
+@RequiredArgsConstructor
+public class ${className}Controller {
+
+    private final  ${className}Service ${classname}Service;
+
+    /**
+     * 列表
+     */
+    @ApiOperation(value = "查询列表", notes = "查询列表", httpMethod = "POST")
+    @PostMapping("/list")
+    @RequiresPermissions("${moduleName}:${pathName}:list")
+    public R list(@RequestParam Map<String, Object> params){
+        PageUtils page = ${classname}Service.queryPage(params);
+
+        return R.ok().put("page", page);
+    }
+
+
+    /**
+     * 信息
+     */
+    @ApiOperation(value = "信息", notes = "信息", httpMethod = "GET")
+    @GetMapping("/info/{${pk.attrname}}")
+    @RequiresPermissions("${moduleName}:${pathName}:info")
+    public R info(@ApiParam(name = "${pk.attrname}", value = "主键", required = true) @PathVariable("${pk.attrname}") ${pk.attrType} ${pk.attrname}){
+		${className}Entity ${classname} = ${classname}Service.getById(${pk.attrname});
+
+        return R.ok().put("${classname}", ${classname});
+    }
+
+    /**
+     * 保存
+     */
+    @ApiOperation(value = "保存", notes = "保存", httpMethod = "POST")
+    @PostMapping("/save")
+    @RequiresPermissions("${moduleName}:${pathName}:save")
+    public R save(@ApiParam(name = "保存对象", value = "传入json格式", required = true) @RequestBody ${className}Entity ${classname}){
+		${classname}Service.save(${classname});
+
+        return R.ok();
+    }
+
+    /**
+     * 修改
+     */
+    @ApiOperation(value = "修改", notes = "修改", httpMethod = "POST")
+    @PostMapping("/update")
+    @RequiresPermissions("${moduleName}:${pathName}:update")
+    public R update(@ApiParam(name = "修改对象", value = "传入json格式", required = true) @RequestBody ${className}Entity ${classname}){
+		${classname}Service.updateById(${classname});
+
+        return R.ok();
+    }
+
+    /**
+     * 删除
+     */
+    @ApiOperation(value = "删除", notes = "删除", httpMethod = "POST")
+    @PostMapping("/delete")
+    @RequiresPermissions("${moduleName}:${pathName}:delete")
+    public R delete(@ApiParam(name = "删除ID", value = "传入json格式", required = true) @RequestBody ${pk.attrType}[] ${pk.attrname}s){
+		${classname}Service.removeByIds(Arrays.asList(${pk.attrname}s));
+
+        return R.ok();
+    }
+
+}
